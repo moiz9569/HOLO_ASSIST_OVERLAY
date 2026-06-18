@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holo Assist</title>
+    <script src="hark.bundle.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- MAC BLACKHOLE BANNER -->
+        <div id="mac-banner">
+            <div class="banner-text">
+                🎙 Mac detected — install audio driver to hear all participants
+            </div>
+            <button class="banner-btn" id="bh-install-btn">Install</button>
+            <button class="banner-dismiss" id="bh-dismiss-btn">×</button>
+        </div>
+
+        <!-- TITLEBAR -->
+        <div id="titlebar">
+            <div class="title-left">
+                <div class="holo-logo">
+                    <img src="../assets/holo-logo.png" data-fallback-src="../../assets/holo-logo.png" alt="Holo logo"
+                        onerror="if(!this.dataset.fallbackTried){this.dataset.fallbackTried='1';this.src=this.dataset.fallbackSrc;}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" />
+                    <span class="logo-fallback">H</span>
+                </div>
+                <span class="title-text">Holo Assist</span>
+                <div class="live-dot" id="live-dot"></div>
+            </div>
+            <div class="title-controls">
+                <button class="ctrl-btn btn-min" onclick="window.holoAPI.minimizeOverlay()">−</button>
+                <button class="ctrl-btn btn-close" onclick="window.holoAPI.closeOverlay()">×</button>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div id="tabs">
+            <button class="tab active" data-tab="session">Session</button>
+            <button class="tab" data-tab="insights">
+                Insights <span class="tab-badge" id="insight-badge" style="display:none">0</span>
+            </button>
+            <button class="tab" data-tab="chat">Chat</button>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div id="content">
+
+            <!-- ── SESSION TAB ─────────────────────────────────────────── -->
+            <div class="tab-panel active" id="panel-session">
+
+                <div class="session-status">
+                    <div class="status-icon" id="status-icon">🎙️</div>
+                    <div class="status-title" id="status-title">Ready to listen</div>
+                    <div class="status-sub" id="status-sub">Select your meeting audio below</div>
+                </div>
+
+                <div class="source-wrap" id="source-wrap">
+                    <div class="source-label">Audio Source</div>
+                    <select id="source-select">
+                        <option value="mic">🎤 Microphone only</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" id="start-btn" onclick="startSession()">
+                    ▶ Start Listening
+                </button>
+
+                <div class="stats-row" id="stats-row" style="display:none">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-insights">0</div>
+                        <div class="stat-label">Insights</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-duration">0:00</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-words">0</div>
+                        <div class="stat-label">Words</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── INSIGHTS TAB ───────────────────────────────────────── -->
+            <div class="tab-panel" id="panel-insights">
+                <div class="empty-state" id="insights-empty">
+                    <div class="empty-icon">✨</div>
+                    <div class="empty-title">No insights yet</div>
+                    <div class="empty-sub">Start a session and Holo will surface<br>live insights from your meeting
+                    </div>
+                </div>
+                <div id="insights-list"></div>
+            </div>
+
+            <!-- ── CHAT TAB ───────────────────────────────────────────── -->
+            <div class="tab-panel" id="panel-chat">
+                <div id="chat-messages"></div>
+                <div id="chat-input-area">
+                    <input id="chat-input" placeholder="Ask Holo anything…" onkeydown="handleChatKey(event)"
+                        autocomplete="off" />
+                    <button class="send-btn" onclick="sendChat()">➤</button>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+
+        <!-- INSIGHT MODAL -->
+        <div id="insight-modal">
+            <div class="modal-card">
+                <div class="modal-type" id="modal-type"></div>
+                <div class="modal-text" id="modal-text"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal(false)">✕ Dismiss</button>
+                <button class="modal-btn modal-btn-primary" onclick="closeModal(true)">💬 Send to Chat</button>
+            </div>
+        </div>
+
+        <!-- TOAST -->
+        <div id="toast"></div>
+
+    </div><!-- /app -->
+    <script src="app.js"></script>
+</body>
+
+</html>

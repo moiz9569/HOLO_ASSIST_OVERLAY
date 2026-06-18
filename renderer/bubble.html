@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    background: transparent;
+    overflow: hidden;
+    -webkit-user-select: none; user-select: none;
+  }
+  #wrap {
+    position: relative;
+    width: 64px; height: 64px;
+  }
+  #bubble {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: #FF2A85;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(255,42,133,0.45);
+    -webkit-app-region: no-drag;
+    overflow: hidden;
+  }
+  #bubble:active { transform: scale(0.95); }
+  #bubble img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  #bubble .fallback {
+    font-size: 28px;
+    pointer-events: none;
+  }
+  #dot {
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #16A34A;
+    border: 2px solid #fff;
+    display: none;
+    pointer-events: none;
+  }
+  #dot.active {
+    display: block;
+    animation: blink 1.2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  #close-btn {
+    position: absolute;
+    top: -6px; left: -6px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #FF5F57;
+    color: #fff;
+    border: 2px solid #fff;
+    font-size: 12px; font-weight: 700;
+    display: none;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  #wrap:hover #close-btn { display: flex; }
+</style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="bubble">
+      <img src="../assets/holo-logo.png" data-fallback-src="../../assets/holo-logo.png" alt="Holo"
+        onerror="if(!this.dataset.fallbackTried){this.dataset.fallbackTried='1';this.src=this.dataset.fallbackSrc;}else{this.style.display='none';this.nextElementSibling.style.display='flex';}" />
+      <div class="fallback" style="display:none">H</div>
+      <div id="dot"></div>
+    </div>
+    <div id="close-btn" title="Hide Holo bubble">×</div>
+  </div>
+  <script>
+    const bubble = document.getElementById('bubble');
+    const dot = document.getElementById('dot');
+    const closeBtn = document.getElementById('close-btn');
+
+    let isDragging = false, startX = 0, startY = 0, moved = false;
+
+    bubble.addEventListener('mousedown', (e) => {
+      isDragging = true; moved = false;
+      startX = e.screenX; startY = e.screenY;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.screenX - startX;
+      const dy = e.screenY - startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        moved = true;
+        window.holoAPI.dragBubble({ deltaX: dx, deltaY: dy });
+        startX = e.screenX; startY = e.screenY;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging && !moved) {
+        window.holoAPI.togglePanel();
+      }
+      isDragging = false;
+    });
+
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.holoAPI.hideBubble();
+    });
+
+    window.holoAPI.onMeetingState((active) => {
+      dot.classList.toggle('active', active);
+    });
+  </script>
+</body>
+</html>
