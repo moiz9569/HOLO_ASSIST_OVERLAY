@@ -613,7 +613,7 @@ ipcMain.handle('recheck-blackhole', () => new Promise((resolve) => {
 ipcMain.on('toggle-panel', togglePanel);
 ipcMain.on('minimize-overlay', () => panelWindow?.hide());
 ipcMain.on('hide-overlay', () => panelWindow?.hide());
-ipcMain.on('close-overlay', quitApp);
+ipcMain.on('close-overlay', () => panelWindow?.hide());
 ipcMain.on('set-always-on-top', (_, val) => panelWindow?.setAlwaysOnTop(Boolean(val), 'screen-saver'));
 
 ipcMain.on('drag-window', (_, { deltaX = 0, deltaY = 0 } = {}) => {
@@ -628,15 +628,24 @@ ipcMain.on('drag-bubble', (_, { deltaX = 0, deltaY = 0 } = {}) => {
   bubbleWindow.setPosition(x + Number(deltaX || 0), y + Number(deltaY || 0));
 });
 
+
+////////////////////////////////////////////////////////////////////////
 ipcMain.on('quit-app', quitApp);
 
-ipcMain.on('hide-bubble', () => {
-  userHiddenBubble = true;
-  manualUiVisible = false;
-  bubbleWindow?.hide();
-  panelWindow?.hide();
-});
+// ipcMain.on('hide-bubble', () => {
+//   userHiddenBubble = true;
+//   manualUiVisible = false;
+//   bubbleWindow?.hide();
+//   panelWindow?.hide();
+// });
+ipcMain.on('hide-bubble', quitApp);
 
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
 if (gotLock) {
   app.whenReady().then(() => {
     if (process.platform === 'win32') {
@@ -651,9 +660,14 @@ if (gotLock) {
     createPanel();
     startMeetingWatcher();
 
+    // if (pendingManualUi || !launchedInBackground) {
+    //   pendingManualUi = false;
+    //   showManualUi('foreground launch');
+    // }
     if (pendingManualUi || !launchedInBackground) {
       pendingManualUi = false;
-      showManualUi('foreground launch');
+      bubbleWindow?.show();
+      log.info('foreground launch: showing bubble only');
     }
   }).catch((err) => {
     log.error('app initialization failed:', err);

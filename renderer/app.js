@@ -2,73 +2,83 @@
 // HOLO ASSIST — app.js
 // ─────────────────────────────────────────────────────────────────────────────
 
-const API_TRANSCRIBE = 'https://holovox-nextjs-server.vercel.app/api/ai-assistant/transcribe-live';
-const API_ASSISTANT  = 'https://holovox-nextjs-server.vercel.app/api/ai-assistant';
-const API_TTS        = 'https://holovox-nextjs-server.vercel.app/api/ai-assistant/voice';
+const API_TRANSCRIBE =
+  "https://holovox-nextjs-server.vercel.app/api/ai-assistant/transcribe-live";
+const API_ASSISTANT =
+  "https://holovox-nextjs-server.vercel.app/api/ai-assistant";
+const API_TTS =
+  "https://holovox-nextjs-server.vercel.app/api/ai-assistant/voice";
 
 // ── STATE ────────────────────────────────────────────────────────────────────
-let isListening      = false;
-let mediaStream      = null;
-let mediaRecorder    = null;
-let audioChunks      = [];
-let currentSessionSource = 'mic';
-let silenceTimeout   = null;
-let speechDetector   = null;
+let isListening = false;
+let mediaStream = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let currentSessionSource = "mic";
+let silenceTimeout = null;
+let speechDetector = null;
 let sessionStartTime = null;
-let sessionTimer     = null;
-let totalWords       = 0;
-let insightCount     = 0;
-let isSpeaking       = false;
-let openCardData     = null;
-let currentUserId    = getUserId();
+let sessionTimer = null;
+let totalWords = 0;
+let insightCount = 0;
+let isSpeaking = false;
+let openCardData = null;
+let currentUserId = getUserId();
 
 const chatHistory = [
-  { from: 'holo', text: 'Hi! I\'m Holo — your AI meeting assistant. Start a session to get live insights, or ask me anything right now.' }
+  {
+    from: "holo",
+    text: "Hi! I'm Holo — your AI meeting assistant. Start a session to get live insights, or ask me anything right now.",
+  },
 ];
 
 // ── USER ID ──────────────────────────────────────────────────────────────────
 function getUserId() {
-  let id = localStorage.getItem('holo_user_id');
+  let id = localStorage.getItem("holo_user_id");
   if (!id) {
-    id = 'holo_' + Math.random().toString(36).slice(2, 10);
-    localStorage.setItem('holo_user_id', id);
+    id = "holo_" + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem("holo_user_id", id);
   }
   return id;
 }
 
 // ── TOAST ────────────────────────────────────────────────────────────────────
 function showToast(msg, ms = 2800) {
-  const el = document.getElementById('toast');
+  const el = document.getElementById("toast");
   el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), ms);
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), ms);
 }
 
 // ── TABS ─────────────────────────────────────────────────────────────────────
 function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.tab === name)
-  );
-  document.querySelectorAll('.tab-panel').forEach(p =>
-    p.classList.toggle('active', p.id === `panel-${name}`)
-  );
+  document
+    .querySelectorAll(".tab")
+    .forEach((t) => t.classList.toggle("active", t.dataset.tab === name));
+  document
+    .querySelectorAll(".tab-panel")
+    .forEach((p) => p.classList.toggle("active", p.id === `panel-${name}`));
 }
 
-document.querySelectorAll('.tab').forEach(tab =>
-  tab.addEventListener('click', () => switchTab(tab.dataset.tab))
-);
+document
+  .querySelectorAll(".tab")
+  .forEach((tab) =>
+    tab.addEventListener("click", () => switchTab(tab.dataset.tab)),
+  );
 
 // ── WINDOW DRAG ──────────────────────────────────────────────────────────────
-let isDragging = false, dragStartX = 0, dragStartY = 0;
+let isDragging = false,
+  dragStartX = 0,
+  dragStartY = 0;
 
-document.getElementById('titlebar').addEventListener('mousedown', (e) => {
-  if (e.target.classList.contains('ctrl-btn')) return;
+document.getElementById("titlebar").addEventListener("mousedown", (e) => {
+  if (e.target.classList.contains("ctrl-btn")) return;
   isDragging = true;
   dragStartX = e.screenX;
   dragStartY = e.screenY;
 });
 
-document.addEventListener('mousemove', (e) => {
+document.addEventListener("mousemove", (e) => {
   if (!isDragging) return;
   window.holoAPI.dragWindow({
     deltaX: e.screenX - dragStartX,
@@ -78,31 +88,35 @@ document.addEventListener('mousemove', (e) => {
   dragStartY = e.screenY;
 });
 
-document.addEventListener('mouseup', () => { isDragging = false; });
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+});
 
 // ── MAC BLACKHOLE BANNER ──────────────────────────────────────────────────────
-if (window.holoAPI.platform === 'darwin') {
+if (window.holoAPI.platform === "darwin") {
   window.holoAPI.onMacNeedsBlackHole(() => {
-    document.getElementById('mac-banner').classList.add('visible');
+    document.getElementById("mac-banner").classList.add("visible");
   });
 
-  document.getElementById('bh-install-btn').addEventListener('click', async () => {
-    await window.holoAPI.installBlackHole();
-    showToast('Opening BlackHole download page…');
-    // Poll for install completion
-    const check = setInterval(async () => {
-      const { installed } = await window.holoAPI.recheckBlackHole();
-      if (installed) {
-        clearInterval(check);
-        document.getElementById('mac-banner').classList.remove('visible');
-        showToast('BlackHole installed! Full audio capture enabled ✅');
-        loadSources();
-      }
-    }, 5000);
-  });
+  document
+    .getElementById("bh-install-btn")
+    .addEventListener("click", async () => {
+      await window.holoAPI.installBlackHole();
+      showToast("Opening BlackHole download page…");
+      // Poll for install completion
+      const check = setInterval(async () => {
+        const { installed } = await window.holoAPI.recheckBlackHole();
+        if (installed) {
+          clearInterval(check);
+          document.getElementById("mac-banner").classList.remove("visible");
+          showToast("BlackHole installed! Full audio capture enabled ✅");
+          loadSources();
+        }
+      }, 5000);
+    });
 
-  document.getElementById('bh-dismiss-btn').addEventListener('click', () => {
-    document.getElementById('mac-banner').classList.remove('visible');
+  document.getElementById("bh-dismiss-btn").addEventListener("click", () => {
+    document.getElementById("mac-banner").classList.remove("visible");
   });
 }
 
@@ -110,18 +124,19 @@ if (window.holoAPI.platform === 'darwin') {
 async function loadSources() {
   try {
     const sources = await window.holoAPI.getAudioSources();
-    const sel = document.getElementById('source-select');
+    const sel = document.getElementById("source-select");
     sel.innerHTML = '<option value="mic">Microphone only</option>';
 
-    sources.forEach(src => {
-      const opt      = document.createElement('option');
-      opt.value      = src.id;
-      const label    = src.name.length > 40 ? src.name.slice(0, 38) + '...' : src.name;
+    sources.forEach((src) => {
+      const opt = document.createElement("option");
+      opt.value = src.id;
+      const label =
+        src.name.length > 40 ? src.name.slice(0, 38) + "..." : src.name;
       opt.textContent = `Entire screen - ${label}`;
       sel.appendChild(opt);
     });
   } catch (e) {
-    console.warn('loadSources error:', e);
+    console.warn("loadSources error:", e);
   }
 }
 
@@ -129,115 +144,165 @@ loadSources();
 
 // ── START SESSION ────────────────────────────────────────────────────────────
 async function startSession() {
-  const sourceId = document.getElementById('source-select').value;
+  const sourceId = document.getElementById("source-select").value;
 
   try {
     let stream;
 
-    if (sourceId === 'mic') {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    if (sourceId === "mic") {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false,
+      });
     } else {
       // Desktop/window capture — needs video constraint for Electron desktopCapturer
       stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           mandatory: {
-            chromeMediaSource:   'desktop',
+            chromeMediaSource: "desktop",
             chromeMediaSourceId: sourceId,
-          }
+          },
         },
         video: {
           mandatory: {
-            chromeMediaSource:   'desktop',
+            chromeMediaSource: "desktop",
             chromeMediaSourceId: sourceId,
-          }
-        }
+          },
+        },
       });
       // Drop video — we only need audio
-      stream.getVideoTracks().forEach(t => t.stop());
+      stream.getVideoTracks().forEach((t) => t.stop());
     }
 
     mediaStream = stream;
-    currentSessionSource = sourceId === 'mic' ? 'mic' : 'screen';
+    currentSessionSource = sourceId === "mic" ? "mic" : "screen";
     isListening = true;
 
     startVoiceDetection(stream);
     updateSessionUI(true);
 
     sessionStartTime = Date.now();
+    updateBrainTimer(0);
     sessionTimer = setInterval(() => {
       const secs = Math.floor((Date.now() - sessionStartTime) / 1000);
-      document.getElementById('stat-duration').textContent = fmtDuration(secs);
+      updateBrainTimer(secs);
     }, 1000);
 
-    showToast('Holo is now listening 🎙️');
+    showToast("Holo is now listening 🎙️");
 
+    /////////////////////////////////////////////////////////////////////////
+    const btn = document.getElementById("brief-mic-btn");
+
+    btn.classList.add("listening");
+    btn.setAttribute("aria-label", "Stop listening");
+
+    /////////////////////////////////////////////////////////////////
   } catch (err) {
-    console.error('startSession error:', err);
-    const msg = err.name === 'NotAllowedError'
-      ? 'Permission denied. Allow microphone access and try again.'
-      : 'Could not access audio: ' + err.message;
+    console.error("startSession error:", err);
+    const msg =
+      err.name === "NotAllowedError"
+        ? "Permission denied. Allow microphone access and try again."
+        : "Could not access audio: " + err.message;
     showToast(msg, 4000);
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+async function toggleListening() {
+  if (isListening) {
+    await stopSession();
+  } else {
+    await startSession();
+  }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ── STOP SESSION ─────────────────────────────────────────────────────────────
 async function stopSession() {
   isListening = false;
 
   if (speechDetector) {
-    try { speechDetector.stop(); } catch (_) {}
+    try {
+      speechDetector.stop();
+    } catch (_) {}
     speechDetector = null;
   }
 
-  if (silenceTimeout) { clearTimeout(silenceTimeout); silenceTimeout = null; }
+  if (silenceTimeout) {
+    clearTimeout(silenceTimeout);
+    silenceTimeout = null;
+  }
   stopRecordingChunk();
 
   if (mediaStream) {
-    mediaStream.getTracks().forEach(t => t.stop());
+    mediaStream.getTracks().forEach((t) => t.stop());
     mediaStream = null;
   }
 
-  if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+  if (sessionTimer) {
+    clearInterval(sessionTimer);
+    sessionTimer = null;
+  }
 
+  updateBrainTimer(0);
   updateSessionUI(false);
-  showToast('Session stopped');
+  showToast("Session stopped");
+
+  ///////////////////////////////////////////////////////////////////////////////
+  const btn = document.getElementById("brief-mic-btn");
+
+  btn.classList.remove("listening");
+  btn.setAttribute("aria-label", "Start listening");
+  ///////////////////////////////////////////////////////////////////////////////////
   loadSources();
 }
 
 function updateSessionUI(active) {
-  document.getElementById('status-icon').textContent  = active ? '🔴' : '🎙️';
-  document.getElementById('status-title').textContent = active ? 'Listening…' : 'Session ended';
+  document.getElementById("status-icon").textContent = active ? "🔴" : "🎙️";
+  document.getElementById("status-title").textContent = active
+    ? "Listening…"
+    : "Session ended";
 
   if (active) {
-    document.getElementById('status-sub').innerHTML =
+    document.getElementById("status-sub").innerHTML =
       '<span class="rec-badge"><span class="rec-dot"></span> Recording</span>';
   } else {
-    document.getElementById('status-sub').textContent = `${insightCount} insight${insightCount !== 1 ? 's' : ''} captured`;
+    document.getElementById("status-sub").textContent =
+      `${insightCount} insight${insightCount !== 1 ? "s" : ""} captured`;
   }
 
-  document.getElementById('start-btn').style.display  = active ? 'none'  : 'block';
-  document.getElementById('source-wrap').style.display = active ? 'none' : 'block';
-  document.getElementById('stats-row').style.display   = active ? 'flex'  : 'none';
-  document.getElementById('live-dot').classList.toggle('active', active);
+  const startBtn = document.getElementById("start-btn");
+  if (startBtn) startBtn.style.display = active ? "none" : "block";
 
-  // Stop button
-  const existing = document.getElementById('stop-btn');
-  if (active && !existing) {
-    const btn = document.createElement('button');
-    btn.className = 'btn-stop';
-    btn.id        = 'stop-btn';
-    btn.textContent = '■ Stop Session';
-    btn.onclick   = stopSession;
-    document.getElementById('panel-session').appendChild(btn);
-  } else if (!active && existing) {
-    existing.remove();
-  }
+  const sourceWrap = document.getElementById("source-wrap");
+  if (sourceWrap) sourceWrap.style.display = "block";
+
+  const sourceSelect = document.getElementById("source-select");
+  if (sourceSelect) sourceSelect.disabled = active;
+
+  document.getElementById("live-dot").classList.toggle("active", active);
 }
 
 function fmtDuration(secs) {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+function updateBrainTimer(secs) {
+  const progress = document.getElementById("brain-ring-progress");
+  const label = document.getElementById("brain-percent");
+  const duration = fmtDuration(secs);
+
+  if (label) label.textContent = duration;
+  if (!progress) return;
+
+  const radius = Number(progress.getAttribute("r")) || 54;
+  const circumference = 2 * Math.PI * radius;
+  const minuteProgress = (secs % 60) / 60;
+
+  progress.style.strokeDasharray = `${circumference}`;
+  progress.style.strokeDashoffset = `${circumference * (1 - minuteProgress)}`;
 }
 
 // ── VOICE DETECTION (hark) ───────────────────────────────────────────────────
@@ -245,12 +310,15 @@ function startVoiceDetection(stream) {
   const events = hark(stream, { interval: 80, threshold: -65 });
   speechDetector = events;
 
-  events.on('speaking', () => {
-    if (silenceTimeout) { clearTimeout(silenceTimeout); silenceTimeout = null; }
+  events.on("speaking", () => {
+    if (silenceTimeout) {
+      clearTimeout(silenceTimeout);
+      silenceTimeout = null;
+    }
     startRecordingChunk();
   });
 
-  events.on('stopped_speaking', () => {
+  events.on("stopped_speaking", () => {
     if (silenceTimeout) clearTimeout(silenceTimeout);
     silenceTimeout = setTimeout(stopRecordingChunk, 3000);
   });
@@ -258,7 +326,7 @@ function startVoiceDetection(stream) {
 
 // ── RECORDING CHUNKS ─────────────────────────────────────────────────────────
 function getRecorderOptions() {
-  const preferred = 'audio/webm;codecs=opus';
+  const preferred = "audio/webm;codecs=opus";
   if (window.MediaRecorder?.isTypeSupported?.(preferred)) {
     return { mimeType: preferred };
   }
@@ -267,8 +335,7 @@ function getRecorderOptions() {
 }
 
 function startRecordingChunk() {
-
-  if (mediaRecorder?.state === 'recording') return;
+  if (mediaRecorder?.state === "recording") return;
   if (!mediaStream) return;
 
   audioChunks = [];
@@ -279,10 +346,10 @@ function startRecordingChunk() {
   };
 
   mediaRecorder.onstop = async () => {
-    const blob = new Blob(audioChunks, { type: 'audio/webm' });
-    console.log('recording chunk stopped', { size: blob.size });
+    const blob = new Blob(audioChunks, { type: "audio/webm" });
+    console.log("recording chunk stopped", { size: blob.size });
     if (blob.size < 3000) {
-      console.log('chunk too small, ignoring');
+      console.log("chunk too small, ignoring");
       return;
     }
     await sendChunkToBackend(blob);
@@ -292,40 +359,46 @@ function startRecordingChunk() {
 }
 
 function stopRecordingChunk() {
-  if (mediaRecorder?.state === 'recording') mediaRecorder.stop();
+  if (mediaRecorder?.state === "recording") mediaRecorder.stop();
 }
 
 // ── SEND CHUNK TO BACKEND ────────────────────────────────────────────────────
 async function sendChunkToBackend(blob) {
   try {
-    console.log('sendChunkToBackend: uploading chunk', { size: blob.size, userId: currentUserId });
+    console.log("sendChunkToBackend: uploading chunk", {
+      size: blob.size,
+      userId: currentUserId,
+    });
     const fd = new FormData();
-    fd.append('audio',           blob, 'audio.webm');
-    fd.append('roomId',          'electron-session');
-    fd.append('participantId',   currentUserId);
-    fd.append('participantName', 'Host');
-    fd.append('userId',          currentUserId);
+    fd.append("audio", blob, "audio.webm");
+    fd.append("roomId", "electron-session");
+    fd.append("participantId", currentUserId);
+    fd.append("participantName", "Host");
+    fd.append("userId", currentUserId);
 
-    const res  = await fetch(API_TRANSCRIBE, { method: 'POST', body: fd });
-    console.log('sendChunkToBackend: fetch returned', res.status, res.statusText);
+    const res = await fetch(API_TRANSCRIBE, { method: "POST", body: fd });
+    console.log(
+      "sendChunkToBackend: fetch returned",
+      res.status,
+      res.statusText,
+    );
     const data = await res.json();
-    console.log('sendChunkToBackend: response data', data);
+    console.log("sendChunkToBackend: response data", data);
 
     if (data.text) {
       totalWords += data.text.trim().split(/\s+/).length;
-      document.getElementById('stat-words').textContent = totalWords;
+      document.getElementById("stat-words").textContent = totalWords;
     } else {
-      console.log('sendChunkToBackend: no text in response');
+      console.log("sendChunkToBackend: no text in response");
     }
 
     if (data.summary) {
-      addInsightCard({ text: data.summary, type: data.type || 'summary' });
+      addInsightCard({ text: data.summary, type: data.type || "summary" });
     } else {
-      console.log('sendChunkToBackend: no summary in response');
+      console.log("sendChunkToBackend: no summary in response");
     }
-
   } catch (err) {
-    console.error('sendChunk error:', err);
+    console.error("sendChunk error:", err);
   }
 }
 
@@ -335,33 +408,33 @@ function addInsightCard({ text, type }) {
   const id = Date.now().toString();
 
   // Update counters
-  document.getElementById('stat-insights').textContent = insightCount;
-  const badge = document.getElementById('insight-badge');
+  document.getElementById("stat-insights").textContent = insightCount;
+  const badge = document.getElementById("insight-badge");
   badge.textContent = insightCount;
-  badge.style.display = 'inline';
+  badge.style.display = "inline";
 
   // Hide empty state
-  document.getElementById('insights-empty').style.display = 'none';
+  document.getElementById("insights-empty").style.display = "none";
 
   // Build card
-  const list = document.getElementById('insights-list');
-  const card = document.createElement('div');
-  card.className = 'insight-card';
+  const list = document.getElementById("insights-list");
+  const card = document.createElement("div");
+  card.className = "insight-card";
   card.id = `card-${id}`;
-  card.style.cssText = 'margin-bottom:8px;';
+  card.style.cssText = "margin-bottom:8px;";
   card.innerHTML = `
     <button class="insight-dismiss" onclick="dismissCard('${id}',event)">×</button>
-    <div class="insight-type">${type === 'answer' ? '💬 Question Answered' : '✨ Live Insight'}</div>
+    <div class="insight-type">${type === "answer" ? "💬 Question Answered" : "✨ Live Insight"}</div>
     <div class="insight-text">${escHtml(text)}</div>
     <div class="insight-hint">Tap to expand</div>
   `;
-  card.addEventListener('click', () => openInsightModal({ id, text, type }));
+  card.addEventListener("click", () => openInsightModal({ id, text, type }));
   list.prepend(card);
-  console.log('addInsightCard: insight added', { id, type, text });
+  console.log("addInsightCard: insight added", { id, type, text });
 
   // Auto-switch to insights tab if on session
-  if (document.querySelector('.tab.active')?.dataset.tab === 'session') {
-    switchTab('insights');
+  if (document.querySelector(".tab.active")?.dataset.tab === "session") {
+    switchTab("insights");
   }
 }
 
@@ -369,44 +442,48 @@ function dismissCard(id, e) {
   e?.stopPropagation();
   document.getElementById(`card-${id}`)?.remove();
   insightCount = Math.max(0, insightCount - 1);
-  document.getElementById('stat-insights').textContent = insightCount;
-  const badge = document.getElementById('insight-badge');
-  if (insightCount === 0) { badge.style.display = 'none'; }
-  else { badge.textContent = insightCount; }
+  document.getElementById("stat-insights").textContent = insightCount;
+  const badge = document.getElementById("insight-badge");
+  if (insightCount === 0) {
+    badge.style.display = "none";
+  } else {
+    badge.textContent = insightCount;
+  }
 }
 
 function openInsightModal({ id, text, type }) {
   openCardData = { id, text, type };
-  document.getElementById('modal-type').textContent = type === 'answer' ? '💬 Question Answered' : '✨ Live Insight';
-  document.getElementById('modal-text').textContent = text;
-  document.getElementById('insight-modal').classList.add('open');
+  document.getElementById("modal-type").textContent =
+    type === "answer" ? "💬 Question Answered" : "✨ Live Insight";
+  document.getElementById("modal-text").textContent = text;
+  document.getElementById("insight-modal").classList.add("open");
 }
 
 function closeModal(sendToChat) {
   if (sendToChat && openCardData) {
-    addChatMessage({ from: 'holo', text: openCardData.text });
+    addChatMessage({ from: "holo", text: openCardData.text });
     dismissCard(openCardData.id, null);
-    switchTab('chat');
+    switchTab("chat");
   }
   openCardData = null;
-  document.getElementById('insight-modal').classList.remove('open');
+  document.getElementById("insight-modal").classList.remove("open");
 }
 
 // ── CHAT ─────────────────────────────────────────────────────────────────────
 function renderChat() {
-  const container = document.getElementById('chat-messages');
-  container.innerHTML = '';
+  const container = document.getElementById("chat-messages");
+  container.innerHTML = "";
 
-  chatHistory.forEach(msg => {
-    const row = document.createElement('div');
+  chatHistory.forEach((msg) => {
+    const row = document.createElement("div");
     row.className = `msg-row from-${msg.from}`;
 
-    const sender = document.createElement('div');
-    sender.className = 'msg-sender';
-    sender.textContent = msg.from === 'you' ? 'You' : 'Holo';
+    const sender = document.createElement("div");
+    sender.className = "msg-sender";
+    sender.textContent = msg.from === "you" ? "You" : "Holo";
 
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
+    const bubble = document.createElement("div");
+    bubble.className = "msg-bubble";
     if (msg.isLoading) {
       bubble.innerHTML = '<span style="opacity:.5">…</span>';
     } else {
@@ -416,10 +493,10 @@ function renderChat() {
     row.appendChild(sender);
     row.appendChild(bubble);
 
-    if (msg.from === 'holo' && !msg.isLoading) {
-      const btn = document.createElement('button');
-      btn.className = 'speak-btn';
-      btn.textContent = '🔊 Speak';
+    if (msg.from === "holo" && !msg.isLoading) {
+      const btn = document.createElement("button");
+      btn.className = "speak-btn";
+      btn.textContent = "🔊 Speak";
       btn.disabled = isSpeaking;
       btn.onclick = () => speakText(msg.text);
       row.appendChild(btn);
@@ -440,34 +517,34 @@ function addChatMessage(msg) {
 renderChat();
 
 function handleChatKey(e) {
-  if (e.key === 'Enter') sendChat();
+  if (e.key === "Enter") sendChat();
 }
 
 async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const text  = input.value.trim();
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
   if (!text) return;
-  input.value = '';
+  input.value = "";
 
-  addChatMessage({ from: 'you', text });
-  addChatMessage({ from: 'holo', text: 'Thinking…', isLoading: true });
+  addChatMessage({ from: "you", text });
+  addChatMessage({ from: "holo", text: "Thinking…", isLoading: true });
 
   try {
     const fd = new FormData();
-    fd.append('userId',  currentUserId);
-    fd.append('message', text);
+    fd.append("userId", currentUserId);
+    fd.append("message", text);
 
-    const res  = await fetch(API_ASSISTANT, { method: 'POST', body: fd });
+    const res = await fetch(API_ASSISTANT, { method: "POST", body: fd });
     const data = await res.json();
 
-    const idx = chatHistory.findLastIndex(m => m.isLoading);
+    const idx = chatHistory.findLastIndex((m) => m.isLoading);
     if (idx !== -1) chatHistory.splice(idx, 1);
 
-    addChatMessage({ from: 'holo', text: data.reply || 'No response.' });
+    addChatMessage({ from: "holo", text: data.reply || "No response." });
   } catch (err) {
-    const idx = chatHistory.findLastIndex(m => m.isLoading);
+    const idx = chatHistory.findLastIndex((m) => m.isLoading);
     if (idx !== -1) chatHistory.splice(idx, 1);
-    addChatMessage({ from: 'holo', text: 'Error connecting to Holo server.' });
+    addChatMessage({ from: "holo", text: "Error connecting to Holo server." });
   }
 }
 
@@ -479,15 +556,15 @@ async function speakText(text) {
 
   try {
     const res = await fetch(API_TTS, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text }),
     });
 
-    if (!res.ok) throw new Error('TTS failed');
+    if (!res.ok) throw new Error("TTS failed");
 
     const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
     const audio = new Audio(url);
 
     const cleanup = () => {
@@ -498,9 +575,8 @@ async function speakText(text) {
     audio.onended = cleanup;
     audio.onerror = cleanup;
     await audio.play();
-
   } catch (err) {
-    console.error('TTS error:', err);
+    console.error("TTS error:", err);
     isSpeaking = false;
     renderChat();
   }
@@ -509,8 +585,8 @@ async function speakText(text) {
 // ── UTILS ─────────────────────────────────────────────────────────────────────
 function escHtml(str) {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

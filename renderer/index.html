@@ -7,6 +7,236 @@
     <title>Holo Assist</title>
     <script src="hark.bundle.js"></script>
     <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ── New Session UI: brand header / brain ring / brief card ── */
+        
+        /* .brand-header {
+            text-align: center;
+            padding: 10px 0 4px;
+        }
+
+        .brand-logo {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: 4.5px;
+            color: #fff;
+            line-height: 1;
+        } */
+.brand-header {
+  text-align: center;
+  padding: 16px 0 8px;
+}
+
+.brand-logo {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 5px;
+}
+
+.brand-tagline {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+}
+        .brand-logo-accent {
+            color: rgb(225, 24, 85);
+        }
+
+        /* .brand-tagline {
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, .4);
+            margin-top: 4px;
+            text-transform: uppercase;
+        } */
+
+        .brain-ring-wrap {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 20px auto 16px;
+        }
+
+        .brain-ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .brain-ring-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, .08);
+            stroke-width: 6;
+        }
+
+        .brain-ring-progress {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 441.292;
+            stroke-dashoffset: 819.292;
+            transition: stroke-dashoffset .4s ease;
+            /* filter: drop-shadow(0 0 6px rgba(243, 242, 242, 0.7)); */
+        }
+
+        .brain-infinity {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .infinity-svg {
+            width: 166px;
+            height: 106px;
+            filter: drop-shadow(0 0 8px rgba(247, 246, 246, 0.8));
+        }
+
+        .infinity-loop {
+            fill: none;
+            stroke: rgb(225, 24, 85);
+            stroke-width: 7;
+            opacity: .85;
+        }
+
+        @keyframes infinityPulse {
+
+            0%,
+            100% {
+                opacity: .7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .brain-infinity.active .infinity-loop {
+            animation: infinityPulse 1.4s ease-in-out infinite;
+        }
+
+        .brain-percent {
+            font-size: 20px;
+            font-weight: 400;
+            color: #fff;
+        }
+
+        .brain-loading-label {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, .65);
+            margin-top: 2px;
+        }
+
+        .brain-loading-label .file-name {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .brief-card {
+            height: auto;
+            padding: 14px 12px;
+            border-radius: 14px;
+            background: rgb(203 201 201 / 44%);
+            border: 1px solid rgba(255, 255, 255, .08);
+            text-align: center;
+        }
+
+        .brief-title {
+            font-family: sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .brief-mic-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            background: linear-gradient(135deg, rgb(225, 24, 85), #7C3AED);
+            box-shadow: 0 4px 16px rgba(255, 42, 133, .45);
+            transition: transform .15s ease;
+        }
+
+        .brief-mic-btn:active {
+            transform: scale(.93);
+        }
+
+        .brief-mic-btn.recording {
+            animation: micPulse 1s ease-in-out infinite;
+        }
+
+        .brief-mic-btn img {
+            width: 25px;
+            height: 25px;
+            filter: invert(1);
+            pointer-events: none;
+        }
+
+        @keyframes micPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 16px rgba(255, 42, 133, .45);
+            }
+
+            50% {
+                box-shadow: 0 4px 26px rgba(255, 42, 133, .8);
+            }
+        }
+
+        .brief-input {
+            width: 100%;
+            background: rgb(41 37 37 / 49%);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 10px;
+            padding: 9px 10px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 10px;
+
+        }
+
+        .brief-input::placeholder {
+            color: rgba(255, 255, 255, .4);
+        }
+
+        /*
+         * FIX: keep the legacy session-status block in the DOM (just visually
+         * hidden) instead of commenting it out. app.js's startSession() reads
+         * #status-icon / #status-title / #status-sub directly — if those IDs
+         * don't exist, getElementById() returns null and the very next line
+         * (null.textContent = ...) throws, which silently kills the rest of
+         * startSession() and makes "Start Listening" look like it does nothing.
+         */
+        .session-status--legacy {
+            display: none;
+        }
+
+
+        .brief-mic-btn.listening {
+            background: rgb(225, 24, 85);
+            box-shadow: 0 0 20px rgb(225, 24, 85);
+            animation: micPulse 1s ease-in-out infinite;
+        }
+    </style>
 </head>
 
 <body>
@@ -53,36 +283,88 @@
             <!-- ── SESSION TAB ─────────────────────────────────────────── -->
             <div class="tab-panel active" id="panel-session">
 
-                <div class="session-status">
+                <div class="brand-header">
+                    <div class="brand-logo">HOLO<span class="brand-logo-accent">VOX</span></div>
+                    <div class="brand-tagline">See me. Feel me. Holo me.</div>
+                </div>
+
+                <div class="brain-ring-wrap">
+                    <svg class="brain-ring-svg" viewBox="0 0 120 120">
+                        <circle class="brain-ring-track" cx="60" cy="60" r="54"></circle>
+                        <circle class="brain-ring-progress" id="brain-ring-progress" cx="60" cy="60" r="54"></circle>
+                    </svg>
+                    <div class="brain-infinity" id="brain-infinity">
+                        <svg class="infinity-svg" viewBox="0 0 100 60">
+                            <circle class="infinity-loop" cx="36" cy="30" r="20"></circle>
+                            <circle class="infinity-loop" cx="64" cy="30" r="20"></circle>
+                        </svg>
+                        <div class="brain-percent" id="brain-percent">0:00</div>
+                    </div>
+                </div>
+
+                <div class="brain-loading-label" id="brain-loading-label" style="display:none">
+                    Brain loading… <span class="file-name" id="brain-loading-file"></span>
+                </div>
+
+                <!--
+                    FIX: this block is no longer commented out. It is kept in the
+                    DOM (with class "session-status--legacy" hiding it visually)
+                    so #status-icon / #status-title / #status-sub still exist for
+                    app.js to update safely. Previously this whole block was an
+                    HTML comment, which removed those elements from the DOM
+                    entirely and caused startSession() to throw on a null
+                    reference, breaking the Start Listening button.
+                -->
+                <div class="session-status session-status--legacy">
                     <div class="status-icon" id="status-icon">🎙️</div>
                     <div class="status-title" id="status-title">Ready to listen</div>
                     <div class="status-sub" id="status-sub">Select your meeting audio below</div>
                 </div>
 
-                <div class="source-wrap" id="source-wrap">
+                <div class="brief-card" id="brief-card">
+
+
+
+                    <div class="brief-title">Brief the Brain</div>
+
+                    <button class="brief-mic-btn" id="brief-mic-btn" onclick="toggleListening()"
+                        aria-label="Start listening">
+                        <img src="../assets/microphone-solid-full.svg" alt="" />
+                    </button>
+                    <input class="brief-input" id="brief-input" placeholder="Speak or type your pre-meeting brief" />
+
+                    <div class="source-wrap" id="source-wrap">
+                        <div class="source-label">Audio Source</div>
+                        <select id="source-select">
+                            <option value="mic">🎤 Microphone only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="source-wrap" id="source-wrap">
                     <div class="source-label">Audio Source</div>
                     <select id="source-select">
                         <option value="mic">🎤 Microphone only</option>
                     </select>
-                </div>
+                </div> -->
 
-                <button class="btn-primary" id="start-btn" onclick="startSession()">
+                <!-- <button class="btn-primary" id="start-btn" onclick="startSession()">
                     ▶ Start Listening
-                </button>
+                </button> -->
 
                 <div class="stats-row" id="stats-row" style="display:none">
-                    <div class="stat-card">
+                    <!-- <div class="stat-card">
                         <div class="stat-value" id="stat-insights">0</div>
                         <div class="stat-label">Insights</div>
-                    </div>
+                    </div> -->
                     <div class="stat-card">
                         <div class="stat-value" id="stat-duration">0:00</div>
                         <div class="stat-label">Duration</div>
                     </div>
-                    <div class="stat-card">
+                    <!-- <div class="stat-card">
                         <div class="stat-value" id="stat-words">0</div>
                         <div class="stat-label">Words</div>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
@@ -127,6 +409,71 @@
 
     </div><!-- /app -->
     <script src="app.js"></script>
+    <script>
+        // ── Brain ring / Brief the Brain (demo wiring — replace with real API) ──
+        const BRAIN_RING_CIRC = 2 * Math.PI * 54; // ≈ 339.29
+
+        function setBrainProgress(percent) {
+            const clamped = Math.max(0, Math.min(100, percent));
+            document.getElementById('brain-ring-progress').style.strokeDashoffset =
+                BRAIN_RING_CIRC * (1 - clamped / 100);
+            document.getElementById('brain-percent').textContent = `${Math.round(clamped)}%`;
+        }
+
+        function startBrainLoading(briefText) {
+            const label = briefText
+                ? (briefText.length > 28 ? briefText.slice(0, 26) + '…' : briefText)
+                : 'your brief';
+
+            document.getElementById('brain-infinity').classList.add('active');
+            document.getElementById('brain-loading-label').style.display = 'block';
+            document.getElementById('brain-loading-file').textContent = label;
+
+            // FIX: these elements are now real (hidden) DOM nodes again, so this
+            // no longer throws "Cannot set properties of null".
+            const statusTitle = document.getElementById('status-title');
+            const statusSub = document.getElementById('status-sub');
+            if (statusTitle) statusTitle.textContent = 'Brain loading…';
+            if (statusSub) statusSub.textContent = 'Holo is studying your brief';
+
+            let pct = 0;
+            setBrainProgress(pct);
+            const interval = setInterval(() => {
+                pct += Math.random() * 12 + 4;
+                if (pct >= 100) {
+                    pct = 100;
+                    clearInterval(interval);
+                    setBrainProgress(100);
+                    setTimeout(() => {
+                        document.getElementById('brain-infinity').classList.remove('active');
+                        document.getElementById('brain-loading-label').style.display = 'none';
+                        if (statusTitle) statusTitle.textContent = 'Ready to listen';
+                        if (statusSub) statusSub.textContent = 'Select your meeting audio below';
+                    }, 600);
+                    return;
+                }
+                setBrainProgress(pct);
+            }, 350);
+        }
+
+        // function toggleBriefMic() {
+        //     const btn = document.getElementById('brief-mic-btn');
+        //     const recording = btn.classList.toggle('recording');
+        //     // TODO: hook this up to real speech capture for the pre-meeting brief.
+        //     if (!recording) {
+        //         startBrainLoading(document.getElementById('brief-input').value.trim());
+        //     }
+        // }
+
+        // function handleBriefKey(e) {
+        //     if (e.key !== 'Enter') return;
+        //     const input = document.getElementById('brief-input');
+        //     const text = input.value.trim();
+        //     if (!text) return;
+        //     startBrainLoading(text);
+        //     input.value = '';
+        // }
+    </script>
 </body>
 
 </html>

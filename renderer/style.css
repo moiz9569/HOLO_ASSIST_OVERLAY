@@ -45,6 +45,11 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+   box-shadow:
+      0 20px 60px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+
+  backdrop-filter: blur(16px);
   /* box-shadow: 0 24px 80px rgba(0,0,0,0.75), 0 0 0 0.5px rgba(255,255,255,0.06); */
 }
 
@@ -301,15 +306,17 @@ body {
 }
 
 .source-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
+  /* background: var(--surface); */
+  /* border: 1px solid var(--border); */
+  /* border-radius: var(--radius); */
+  /* padding: 12px; */
 }
 
 .source-label {
   font-size: 10px;
-  color: var(--muted);
+  padding-left: 4px;
+  color: white;
+  text-align:left;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin-bottom: 8px;
@@ -321,7 +328,7 @@ select {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
-  padding: 8px 10px;
+  padding: 8px 4px;
   font-size: 12px;
   outline: none;
   cursor: pointer;
@@ -353,49 +360,6 @@ select option {
 
 .btn-primary:active {
   transform: scale(0.98);
-}
-
-.btn-stop {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--red);
-  border-radius: var(--radius);
-  background: rgba(239, 68, 68, 0.12);
-  color: var(--red);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-stop:hover {
-  background: rgba(239, 68, 68, 0.22);
-}
-
-.stats-row {
-  display: flex;
-  gap: 8px;
-}
-
-.stat-card {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--pink);
-}
-
-.stat-label {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 2px;
 }
 
 .rec-badge {
