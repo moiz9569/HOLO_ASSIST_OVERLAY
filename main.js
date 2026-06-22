@@ -668,3 +668,6 @@ app.on('before-quit', () => {
   forceQuit = true;
   stopMeetingWatcher();
 });
+
+
+
