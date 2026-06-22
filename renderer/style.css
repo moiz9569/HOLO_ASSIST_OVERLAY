@@ -7,8 +7,8 @@
 }
 
 :root {
-  --pink: #ff2a85;
-  --fuchsia: #c026d3;
+  --pink: #E11C58;
+  --fuchsia: #E11C58;
   --bg: #0d0d14;
   --surface: #15151f;
   --surface2: #1e1e2e;
@@ -122,7 +122,7 @@ body {
 .holo-logo {
   width: 26px;
   height: 26px;
-  background: linear-gradient(135deg, var(--pink), var(--fuchsia));
+  background: linear-gradient(135deg, var(--pink));
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -199,12 +199,12 @@ body {
 }
 
 .btn-min {
-  background: var(--yellow);
-  color: #000;
+  background: none;
+  color: #fff;
 }
 
 .btn-close {
-  background: var(--red);
+  background: none;
   color: #fff;
 }
 
