@@ -67,7 +67,7 @@
         .brand-tagline {
             font-size: 11px;
             letter-spacing: 2px;
-              font-family: "Geist", sans-serif;
+            font-family: "Geist", sans-serif;
 
             color: rgba(255, 255, 255, 0.5);
             /* margin-top: 6px; */
@@ -88,31 +88,40 @@
 
         .brain-ring-wrap {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 180px;
+            height: 180px;
             margin: 20px auto 16px;
+            border: 4px solid #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 16px #cdc7c717, inset 0 0 18px #ffffff24;
         }
 
         .brain-ring-svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
+            position: absolute;
+            inset: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            pointer-events: none;
         }
 
         .brain-ring-track {
             fill: none;
-            stroke: rgba(255, 255, 255, .08);
+            stroke: transparent;
             stroke-width: 6;
         }
 
         .brain-ring-progress {
             fill: none;
             stroke: #ffffff;
-            stroke-width: 4;
+            stroke-width: 6;
             stroke-linecap: round;
-            stroke-dasharray: 441.292;
-            stroke-dashoffset: 819.292;
-            transition: stroke-dashoffset .4s ease;
+            stroke-dasharray: 540.354;
+            stroke-dashoffset: 540.354;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition:
+                stroke-dasharray 0.4s ease,
+                stroke-dashoffset 0.4s ease;
             /* filter: drop-shadow(0 0 6px rgba(243, 242, 242, 0.7)); */
         }
 
@@ -159,7 +168,7 @@
             font-size: 20px;
             font-weight: 400;
             color: #fff;
-              font-family: "GeistMono", monospace;
+            font-family: "GeistMono", monospace;
 
         }
 
@@ -176,6 +185,8 @@
         }
 
         .brief-card {
+            margin-top: 35px;
+
             height: auto;
             padding: 14px 12px;
             border-radius: 14px;
@@ -185,7 +196,7 @@
         }
 
         .brief-title {
-  font-family: "Geist", sans-serif;
+            font-family: "Geist", sans-serif;
             font-size: 18px;
             font-weight: 500;
             color: #ffffff;
@@ -308,7 +319,7 @@
         <div id="tabs">
             <button class="tab active" data-tab="session">Brain</button>
             <button class="tab" data-tab="insights">
-                Insights <span class="tab-badge" id="insight-badge" style="display:none">0</span>
+                Session <span class="tab-badge" id="insight-badge" style="display:none">0</span>
             </button>
             <button class="tab" data-tab="chat">Chat</button>
         </div>
@@ -325,9 +336,9 @@
                 </div>
 
                 <div class="brain-ring-wrap">
-                    <svg class="brain-ring-svg" viewBox="0 0 120 120">
-                        <circle class="brain-ring-track" cx="60" cy="60" r="54"></circle>
-                        <circle class="brain-ring-progress" id="brain-ring-progress" cx="60" cy="60" r="54"></circle>
+                    <svg class="brain-ring-svg" viewBox="0 0 180 180">
+                        <circle class="brain-ring-track" cx="90" cy="90" r="86"></circle>
+                        <circle class="brain-ring-progress" id="brain-ring-progress" cx="90" cy="90" r="86"></circle>
                     </svg>
                     <div class="brain-infinity" id="brain-infinity">
                         <svg class="infinity-svg" viewBox="0 0 100 60">
@@ -424,7 +435,8 @@
                         <button class="insight-copy" title="Copy insight" aria-label="Copy insight">
                             <img src="../assets/copy-svgrepo-com.svg" alt="" />
                         </button>
-                        <div class="insight-text">That concern is valid - validate first, then reframe to the numbers.</div>
+                        <div class="insight-text">That concern is valid - validate first, then reframe to the numbers.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -460,7 +472,7 @@
     <script src="app.js"></script>
     <script>
         // ── Brain ring / Brief the Brain (demo wiring — replace with real API) ──
-        const BRAIN_RING_CIRC = 2 * Math.PI * 54; // ≈ 339.29
+        const BRAIN_RING_CIRC = 2 * Math.PI * 86; // ≈ 540.35
 
         function setBrainProgress(percent) {
             const clamped = Math.max(0, Math.min(100, percent));
