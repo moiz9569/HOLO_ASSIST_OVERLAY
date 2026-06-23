@@ -281,6 +281,11 @@ function updateSessionUI(active) {
   if (sourceSelect) sourceSelect.disabled = active;
 
   document.getElementById("live-dot").classList.toggle("active", active);
+
+  const insightsBrainLoader = document.getElementById("insights-brain-loader");
+  if (insightsBrainLoader) {
+    insightsBrainLoader.classList.toggle("recording", active);
+  }
 }
 
 function fmtDuration(secs) {

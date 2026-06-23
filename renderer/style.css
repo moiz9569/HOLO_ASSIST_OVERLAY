@@ -516,7 +516,7 @@ select option {
 }
 
 #insights-empty .brain-infinity {
-  position: static;
+  position: relative;
   inset: auto;
   width: 180px;
   height: 180px;
@@ -525,6 +525,60 @@ select option {
   transform: translateY(-18px);
   pointer-events: none;
   box-shadow: 0 0 16px #E11822, inset 0 0 18px #E11822;
+}
+
+.insights-brain-loader {
+  --insights-loader-circumference: 540.354;
+}
+
+.insights-loader-ring {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  pointer-events: none;
+}
+
+.insights-loader-track,
+.insights-loader-progress {
+  fill: none;
+  stroke-width: 6;
+}
+
+.insights-loader-track {
+  stroke: transparent;
+}
+
+.insights-loader-progress {
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-dasharray: var(--insights-loader-circumference);
+  stroke-dashoffset: var(--insights-loader-circumference);
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition:
+    stroke-dasharray 0.4s ease,
+    stroke-dashoffset 0.4s ease;
+}
+
+.insights-brain-loader.recording .insights-loader-track {
+  stroke: rgba(255, 255, 255, 0.15);
+}
+
+.insights-brain-loader.recording .insights-loader-progress {
+  stroke-dasharray: 135 405;
+  stroke-dashoffset: 0;
+  animation: insightsLoaderSpin 1s linear infinite;
+}
+
+@keyframes insightsLoaderSpin {
+  from {
+    transform: rotate(-90deg);
+  }
+
+  to {
+    transform: rotate(270deg);
+  }
 }
 
 .empty-icon {

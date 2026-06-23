@@ -408,7 +408,11 @@
             <!-- ── INSIGHTS TAB ───────────────────────────────────────── -->
             <div class="tab-panel" id="panel-insights">
                 <div class="empty-state" id="insights-empty">
-                    <div class="brain-infinity">
+                    <div class="brain-infinity insights-brain-loader" id="insights-brain-loader">
+                        <svg class="insights-loader-ring" viewBox="0 0 180 180" aria-hidden="true">
+                            <circle class="insights-loader-track" cx="90" cy="90" r="86"></circle>
+                            <circle class="insights-loader-progress" cx="90" cy="90" r="86"></circle>
+                        </svg>
                         <svg class="infinity-svg" viewBox="0 0 100 60">
                             <circle class="infinity-loop" cx="36" cy="30" r="20"></circle>
                             <circle class="infinity-loop" cx="64" cy="30" r="20"></circle>
