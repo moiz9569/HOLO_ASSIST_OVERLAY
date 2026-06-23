@@ -94,13 +94,14 @@
             border: 4px solid #fff;
             border-radius: 50%;
             box-shadow: 0 0 16px #cdc7c717, inset 0 0 18px #ffffff24; */
-             position: relative;
-  width: 180px;
-  height: 180px;
-  margin: 20px auto 16px;
-  border: 4px solid rgba(255, 255, 255, 0.05); /* ← nearly invisible */
-  border-radius: 50%;
-  box-shadow: 0 0 16px #cdc7c717, inset 0 0 18px #ffffff24;
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 20px auto 16px;
+            /* border: 4px solid rgba(255, 255, 255, 0.05); */
+            /* ← nearly invisible */
+            border-radius: 50%;
+            box-shadow: 0 0 5px #cdc7c717, inset 0 0 5px #ffffff24;
         }
 
         .brain-ring-svg {
@@ -115,9 +116,10 @@
             /* fill: none;
             stroke: transparent;
             stroke-width: 6; */
-             fill: none;
-  stroke: rgba(255, 255, 255, 0.06); /* ← almost invisible background */
-  stroke-width: 6;
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            /* ← almost invisible background */
+            stroke-width: 6;
         }
 
         .brain-ring-progress {
@@ -134,17 +136,18 @@
                 stroke-dashoffset 0.4s ease; */
             /* filter: drop-shadow(0 0 6px rgba(243, 242, 242, 0.7)); */
             fill: none;
-  stroke: #ffffff; /* ← bright, animated, pops */
-  stroke-width: 6;
-  stroke-linecap: round;
-  stroke-dasharray: 540.354;
-  stroke-dashoffset: 540.354;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  transition:
-    stroke-dasharray 0.4s ease,
-    stroke-dashoffset 0.4s ease;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+            stroke: #ffffff;
+            /* ← bright, animated, pops */
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 540.354;
+            stroke-dashoffset: 540.354;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition:
+                stroke-dasharray 0.4s ease,
+                stroke-dashoffset 0.4s ease;
+            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
         }
 
         .brain-infinity {
