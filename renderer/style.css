@@ -27,7 +27,9 @@ body {
   width: 100%;
   height: 100%;
   background: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Geist", sans-serif;
+
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; */
   font-size: 13px;
   color: var(--text);
   overflow: hidden;
@@ -321,11 +323,13 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin-bottom: 8px;
+    font-family: "GeistMono", monospace;
+
 }
 
 select {
   width: 100%;
-  background: var(--surface2);
+  background: #46464d;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
@@ -333,6 +337,8 @@ select {
   font-size: 12px;
   outline: none;
   cursor: pointer;
+    font-family: "GeistMono", monospace;
+
 }
 
 select option {
@@ -526,15 +532,21 @@ select option {
 
 .msg-row.from-you {
   align-items: flex-start;
+    font-family: "GeistMono", monospace;
+
 }
 
 .msg-row.from-holo {
+    font-family: "GeistMono", monospace;
+
   align-items: flex-start;
 }
 
 .msg-prefix {
   color: #60a5fa;
   font-weight: 700;
+    font-family: "GeistMono", monospace;
+
 }
 
 .msg-bubble {
@@ -562,17 +574,24 @@ select option {
   background: none;
   border: none;
   cursor: pointer;
-  color: #60a5fa;
-  font-size: 10px;
   margin-top: 4px;
-  padding: 0 2px;
-  text-decoration: underline;
+  padding: 2px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speak-btn img {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
 .speak-btn:disabled {
-  color: var(--muted);
+  opacity: 0.45;
   cursor: not-allowed;
-  text-decoration: none;
 }
 
 #chat-input-area {

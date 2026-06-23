@@ -6,10 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Holo Assist</title>
     <script src="hark.bundle.js"></script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="stylesheet" href="style.css" />
     <style>
+        @font-face {
+            font-family: "Geist";
+            font-style: normal;
+            font-weight: 100 900;
+            src: url("https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.1.0/files/geist-latin-wght-normal.woff2") format("woff2");
+        }
+
+        @font-face {
+            font-family: "GeistMono";
+            font-style: normal;
+            font-weight: 100 900;
+            src: url("https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.1.0/files/geist-mono-latin-wght-normal.woff2") format("woff2");
+        }
+
+        @font-face {
+            font-family: "Boldonse";
+            font-style: normal;
+            font-weight: 400;
+            src: url("https://cdn.jsdelivr.net/npm/@fontsource/boldonse@5.2.7/files/boldonse-latin-400-normal.woff2") format("woff2");
+        }
+
+        @font-face {
+            font-family: "Anton";
+            font-style: normal;
+            font-weight: 400;
+            src: url("https://cdn.jsdelivr.net/npm/@fontsource/anton@5.2.5/files/anton-latin-400-normal.woff2") format("woff2");
+        }
+
         /* ── New Session UI: brand header / brain ring / brief card ── */
-        
+
         /* .brand-header {
             text-align: center;
             padding: 10px 0 4px;
@@ -22,23 +51,28 @@
             color: #fff;
             line-height: 1;
         } */
-.brand-header {
-  text-align: center;
-  /* padding: 16px 0 8px; */
-}
+        .brand-header {
+            text-align: center;
+            /* padding: 16px 0 8px; */
+        }
 
-.brand-logo {
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: 5px;
-}
+        .brand-logo {
+            font-size: 38px;
+            font-weight: 400;
+            letter-spacing: 5px;
+            font-family: "Anton", sans-serif;
 
-.brand-tagline {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.5);
-  /* margin-top: 6px; */
-}
+        }
+
+        .brand-tagline {
+            font-size: 11px;
+            letter-spacing: 2px;
+              font-family: "Geist", sans-serif;
+
+            color: rgba(255, 255, 255, 0.5);
+            /* margin-top: 6px; */
+        }
+
         .brand-logo-accent {
             color: rgb(225, 24, 85);
         }
@@ -95,12 +129,12 @@
         .infinity-svg {
             width: 166px;
             height: 106px;
-            filter: drop-shadow(0 0 8px rgba(247, 246, 246, 0.8));
+            filter: drop-shadow(0 0 2px #E11855);
         }
 
         .infinity-loop {
             fill: none;
-            stroke: rgb(225, 24, 85);
+            stroke: #E11855;
             stroke-width: 7;
             opacity: .85;
         }
@@ -125,6 +159,8 @@
             font-size: 20px;
             font-weight: 400;
             color: #fff;
+              font-family: "GeistMono", monospace;
+
         }
 
         .brain-loading-label {
@@ -149,7 +185,7 @@
         }
 
         .brief-title {
-            font-family: sans-serif;
+  font-family: "Geist", sans-serif;
             font-size: 18px;
             font-weight: 500;
             color: #ffffff;

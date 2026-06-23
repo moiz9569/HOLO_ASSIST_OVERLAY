@@ -499,7 +499,12 @@ function renderChat() {
     if (msg.from === "holo" && !msg.isLoading) {
       const btn = document.createElement("button");
       btn.className = "speak-btn";
-      btn.textContent = "🔊 Speak";
+      btn.setAttribute("aria-label", "Speak");
+      btn.title = "Speak";
+      const icon = document.createElement("img");
+      icon.src = "../assets/speaker-2-svgrepo-com.svg";
+      icon.alt = "";
+      btn.appendChild(icon);
       btn.disabled = isSpeaking;
       btn.onclick = () => speakText(msg.text);
       row.appendChild(btn);
