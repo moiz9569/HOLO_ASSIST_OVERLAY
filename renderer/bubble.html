@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    width: 100%; height: 100%;
-    background: transparent;
-    overflow: hidden;
-    -webkit-user-select: none; user-select: none;
-  }
-  #wrap {
-    position: relative;
-    width: auto; height: 64px;
-  }
-  /* #bubble {
+  <meta charset="UTF-8" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    #wrap {
+      position: relative;
+      width: auto;
+      height: 64px;
+    }
+
+    /* #bubble {
     width: auto; height: 64px;
     
     display: flex; align-items: center; justify-content: center;
@@ -22,64 +36,91 @@
     -webkit-app-region: no-drag;
     overflow: hidden;
   } */
-   #bubble {
-  width: 64px;
-  height: 64px;
-  /* background: #020b1f; */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    #bubble {
+      width: 100%;
+      height: 100%;
+      /* background: #020b1f;
+      border-radius: 50%; */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-#bubble img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-}
-  #bubble:active { transform: scale(0.95); }
-  /* #bubble img {
+    #bubble img {
+      width: 75px;
+      height: 75px;
+      object-fit: contain;
+    }
+
+    #bubble:active {
+      transform: scale(0.95);
+    }
+
+    /* #bubble img {
     width: 100%; height: 100%;
     object-fit: cover;
     pointer-events: none;
   } */
-  #bubble .fallback {
-    font-size: 28px;
-    pointer-events: none;
-  }
-  #dot {
-    position: absolute;
-    top: 2px; right: 2px;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: #16A34A;
-    border: 2px solid #fff;
-    display: none;
-    pointer-events: none;
-  }
-  #dot.active {
-    display: block;
-    animation: blink 1.2s infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    #bubble .fallback {
+      font-size: 28px;
+      pointer-events: none;
+    }
 
-  #close-btn {
-    position: absolute;
-    top: -6px; left: -6px;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: #FF5F57;
-    color: #fff;
-    border: 2px solid #fff;
-    font-size: 12px; font-weight: 700;
-    display: none;
-    align-items: center; justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  }
-  #wrap:hover #close-btn { display: flex; }
-</style>
+    #dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #16A34A;
+      border: 2px solid #fff;
+      display: none;
+      pointer-events: none;
+    }
+
+    #dot.active {
+      display: block;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.4
+      }
+    }
+
+    #close-btn {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FF5F57;
+      color: #fff;
+      border: 2px solid #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+
+    #wrap:hover #close-btn {
+      display: flex;
+    }
+  </style>
 </head>
+
 <body>
   <div id="wrap">
     <div id="bubble">
@@ -130,4 +171,5 @@
     });
   </script>
 </body>
+
 </html>
