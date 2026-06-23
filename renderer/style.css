@@ -525,37 +525,35 @@ select option {
 }
 
 .msg-row.from-you {
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .msg-row.from-holo {
   align-items: flex-start;
 }
 
-.msg-sender {
-  font-size: 9px;
-  color: var(--muted);
-  margin-bottom: 3px;
-  padding: 0 4px;
+.msg-prefix {
+  color: #60a5fa;
+  font-weight: 700;
 }
 
 .msg-bubble {
   max-width: 88%;
-  padding: 8px 12px;
+  /* padding: 8px 12px; */
   border-radius: 14px;
   font-size: 12px;
   line-height: 1.5;
 }
 
 .msg-row.from-you .msg-bubble {
-  background: linear-gradient(135deg, var(--pink), var(--fuchsia));
+  /* background: linear-gradient(135deg, var(--pink), var(--fuchsia)); */
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 
 .msg-row.from-holo .msg-bubble {
-  background: var(--surface2);
-  border: 1px solid var(--border);
+  /* background: var(--surface2); */
+  /* border: 1px solid var(--border); */
   color: var(--text);
   border-bottom-left-radius: 4px;
 }
