@@ -12,24 +12,37 @@
   }
   #wrap {
     position: relative;
-    width: 64px; height: 64px;
+    width: auto; height: 64px;
   }
-  #bubble {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    /* background: #FF2A85; */
+  /* #bubble {
+    width: auto; height: 64px;
+    
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    /* box-shadow: 0 4px 16px rgba(255,42,133,0.45); */
     -webkit-app-region: no-drag;
     overflow: hidden;
-  }
+  } */
+   #bubble {
+  width: 64px;
+  height: 64px;
+  background: #020b1f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#bubble img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
   #bubble:active { transform: scale(0.95); }
-  #bubble img {
+  /* #bubble img {
     width: 100%; height: 100%;
     object-fit: cover;
     pointer-events: none;
-  }
+  } */
   #bubble .fallback {
     font-size: 28px;
     pointer-events: none;
