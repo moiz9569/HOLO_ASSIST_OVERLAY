@@ -418,6 +418,7 @@ function addInsightCard({ text, type }) {
 
   // Build card
   const list = document.getElementById("insights-list");
+  list.querySelector(".insight-card--dummy")?.remove();
   const card = document.createElement("div");
   card.className = "insight-card";
   card.id = `card-${id}`;
@@ -428,8 +429,16 @@ function addInsightCard({ text, type }) {
     <div class="insight-text">${escHtml(text)}</div>
     <div class="insight-hint">Tap to expand</div>
   `;
+  card.style.cssText = "";
+  card.dataset.insightText = text;
+  card.innerHTML = `
+    <button class="insight-copy" title="Copy insight" aria-label="Copy insight" onclick="copyInsightText('${id}',event)">
+      <img src="../assets/copy-svgrepo-com.svg" alt="" />
+    </button>
+    <div class="insight-text">${escHtml(text)}</div>
+  `;
   card.addEventListener("click", () => openInsightModal({ id, text, type }));
-  list.prepend(card);
+  list.appendChild(card);
   console.log("addInsightCard: insight added", { id, type, text });
 
   // Auto-switch to insights tab if on session
@@ -448,6 +457,19 @@ function dismissCard(id, e) {
     badge.style.display = "none";
   } else {
     badge.textContent = insightCount;
+  }
+}
+
+async function copyInsightText(id, e) {
+  e?.stopPropagation();
+  const text = document.getElementById(`card-${id}`)?.dataset.insightText;
+  if (!text) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("Insight copied");
+  } catch (err) {
+    console.error("copyInsightText error:", err);
   }
 }
 

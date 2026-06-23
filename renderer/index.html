@@ -306,7 +306,7 @@
 
         <!-- TABS -->
         <div id="tabs">
-            <button class="tab active" data-tab="session">Session</button>
+            <button class="tab active" data-tab="session">Brain</button>
             <button class="tab" data-tab="insights">
                 Insights <span class="tab-badge" id="insight-badge" style="display:none">0</span>
             </button>
@@ -408,12 +408,21 @@
             <!-- ── INSIGHTS TAB ───────────────────────────────────────── -->
             <div class="tab-panel" id="panel-insights">
                 <div class="empty-state" id="insights-empty">
-                    <div class="empty-icon">✨</div>
-                    <div class="empty-title">No insights yet</div>
-                    <div class="empty-sub">Start a session and Holo will surface<br>live insights from your meeting
+                    <div class="brain-infinity">
+                        <svg class="infinity-svg" viewBox="0 0 100 60">
+                            <circle class="infinity-loop" cx="36" cy="30" r="20"></circle>
+                            <circle class="infinity-loop" cx="64" cy="30" r="20"></circle>
+                        </svg>
                     </div>
                 </div>
-                <div id="insights-list"></div>
+                <div id="insights-list">
+                    <div class="insight-card insight-card--dummy">
+                        <button class="insight-copy" title="Copy insight" aria-label="Copy insight">
+                            <img src="../assets/copy-svgrepo-com.svg" alt="" />
+                        </button>
+                        <div class="insight-text">That concern is valid - validate first, then reframe to the numbers.</div>
+                    </div>
+                </div>
             </div>
 
             <!-- ── CHAT TAB ───────────────────────────────────────────── -->
