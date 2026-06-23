@@ -436,6 +436,62 @@ select option {
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
+.insight-card-action {
+  position: absolute;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    background 0.2s;
+}
+
+.insight-card-action img {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: invert(1);
+  pointer-events: none;
+}
+
+.insight-card:hover .insight-card-action,
+.insight-card:focus-within .insight-card-action {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+.insight-card-action:hover,
+.insight-card-action:focus-visible {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.insight-card-close {
+  top: 8px;
+  left: 8px;
+  width: 9px;
+  height: 9px;
+}
+
+.insight-card-close img {
+  width: 9px;
+  height: 9px;
+}
+
+.insight-card-copy {
+  top: 8px;
+  right: 8px;
+}
+
 /* .insight-card::before, */
 /* .insight-card::after {
   content: "";
@@ -474,6 +530,8 @@ select option {
 }
 
 .insight-text {
+      margin-top: 5px;
+
   font-size: 16px;
   line-height: 1.1;
   color: #fff;

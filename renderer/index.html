@@ -369,9 +369,6 @@
                 </div>
 
                 <div class="brief-card" id="brief-card">
-
-
-
                     <div class="brief-title">Brief the Brain</div>
 
                     <button class="brief-mic-btn" id="brief-mic-btn" onclick="toggleListening()"
@@ -431,8 +428,13 @@
                     </div>
                 </div>
                 <div id="insights-list">
-                    <div class="insight-card insight-card--dummy">
-                        <button class="insight-copy" title="Copy insight" aria-label="Copy insight">
+                    <div class="insight-card insight-card--dummy" id="card-dummy">
+                        <button class="insight-card-action insight-card-close" title="Dismiss insight"
+                            aria-label="Dismiss insight" onclick="dismissCard('dummy',event)">
+                            <img src="../assets/close-svgrepo-com.svg" alt="" />
+                        </button>
+                        <button class="insight-card-action insight-card-copy" title="Copy insight"
+                            aria-label="Copy insight">
                             <img src="../assets/copy-svgrepo-com.svg" alt="" />
                         </button>
                         <div class="insight-text">That concern is valid - validate first, then reframe to the numbers.

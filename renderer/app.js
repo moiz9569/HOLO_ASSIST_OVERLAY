@@ -413,10 +413,13 @@ function addInsightCard({ text, type }) {
   const id = Date.now().toString();
 
   // Update counters
-  document.getElementById("stat-insights").textContent = insightCount;
+  const statInsights = document.getElementById("stat-insights");
+  if (statInsights) statInsights.textContent = insightCount;
   const badge = document.getElementById("insight-badge");
-  badge.textContent = insightCount;
-  badge.style.display = "inline";
+  if (badge) {
+    badge.textContent = insightCount;
+    badge.style.display = "inline";
+  }
 
   // Hide empty state
   document.getElementById("insights-empty").style.display = "none";
@@ -427,17 +430,12 @@ function addInsightCard({ text, type }) {
   const card = document.createElement("div");
   card.className = "insight-card";
   card.id = `card-${id}`;
-  card.style.cssText = "margin-bottom:8px;";
-  card.innerHTML = `
-    <button class="insight-dismiss" onclick="dismissCard('${id}',event)">×</button>
-    <div class="insight-type">${type === "answer" ? "💬 Question Answered" : "✨ Live Insight"}</div>
-    <div class="insight-text">${escHtml(text)}</div>
-    <div class="insight-hint">Tap to expand</div>
-  `;
-  card.style.cssText = "";
   card.dataset.insightText = text;
   card.innerHTML = `
-    <button class="insight-copy" title="Copy insight" aria-label="Copy insight" onclick="copyInsightText('${id}',event)">
+    <button class="insight-card-action insight-card-close" title="Dismiss insight" aria-label="Dismiss insight" onclick="dismissCard('${id}',event)">
+      <img src="../assets/close-svgrepo-com.svg" alt="" />
+    </button>
+    <button class="insight-card-action insight-card-copy" title="Copy insight" aria-label="Copy insight" onclick="copyInsightText('${id}',event)">
       <img src="../assets/copy-svgrepo-com.svg" alt="" />
     </button>
     <div class="insight-text">${escHtml(text)}</div>
@@ -454,14 +452,18 @@ function addInsightCard({ text, type }) {
 
 function dismissCard(id, e) {
   e?.stopPropagation();
-  document.getElementById(`card-${id}`)?.remove();
+  const card = document.getElementById(`card-${id}`);
+  if (!card) return;
+
+  card.remove();
   insightCount = Math.max(0, insightCount - 1);
-  document.getElementById("stat-insights").textContent = insightCount;
+  const statInsights = document.getElementById("stat-insights");
+  if (statInsights) statInsights.textContent = insightCount;
   const badge = document.getElementById("insight-badge");
   if (insightCount === 0) {
-    badge.style.display = "none";
+    if (badge) badge.style.display = "none";
   } else {
-    badge.textContent = insightCount;
+    if (badge) badge.textContent = insightCount;
   }
 }
 
@@ -621,3 +623,4 @@ function escHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
