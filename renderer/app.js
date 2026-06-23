@@ -483,15 +483,11 @@ function renderChat() {
     if (msg.isLoading) {
       bubble.innerHTML = '<span style="opacity:.5">…</span>';
     } else {
-      if (msg.from === "holo") {
-        const prefix = document.createElement("span");
-        prefix.className = "msg-prefix";
-        prefix.textContent = "HOLOVOX: ";
-        bubble.appendChild(prefix);
-        bubble.appendChild(document.createTextNode(msg.text));
-      } else {
-        bubble.textContent = msg.text;
-      }
+      const prefix = document.createElement("span");
+      prefix.className = "msg-prefix";
+      prefix.textContent = msg.from === "holo" ? "HOLOVOX: " : "YOU: ";
+      bubble.appendChild(prefix);
+      bubble.appendChild(document.createTextNode(msg.text));
     }
 
     row.appendChild(bubble);
